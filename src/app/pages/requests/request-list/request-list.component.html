@@ -1,0 +1,754 @@
+<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+  style="min-height: 250px; background-image: url(assets/img/brand/fondo_login.jpg); background-size: cover; background-position: center top; background-position-y: -350px;">
+  <!-- Mask -->
+
+  <!-- Header container -->
+  <div class="container-fluid d-flex align-items-center">
+
+  </div>
+</div>
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header border-0">
+          <div class="row align-items-center">
+            <div class="col-8">
+              <h3 class="mb-0">{{client?.name}} {{client?.surname}} > Vehiculos</h3>
+            </div>
+            <div class="col-4 text-right" *ngIf="!flagCliente">
+              <a [routerLink]="['/user-client-list']" class="btn btn-sm btn-primary">Atras</a>
+              <a [routerLink]="['/request', { id: client?.id }]" class="btn btn-sm btn-primary">Nuevo</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table align-items-center table-flush">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Marca</th>
+                <th scope="col">Modelo</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Placa</th>
+                <th scope="col">Num. Chasis</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of model; let i = index">
+                <th>
+                  {{i + 1}}
+                </th>
+                <th>
+                  <div class="media align-items-center">
+                    <div class="media-body">
+                      {{item.car.model.brand.name}}
+                    </div>
+                  </div>
+                </th>
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <div class="media-body">
+                      <span class="mb-0 text-sm"> {{item.car.model.name}}</span>
+                    </div>
+                  </div>
+                </th>
+                <td>
+                  {{item.car.name}}
+                  {{item.idStatus}}  <!-- ID Estado del Vehiculo -->
+                  {{!flagCliente}}   <!-- Valida si es Cliente -->
+                  {{item}}           <!-- Valida si es Cliente -->
+                </td>
+                <td>
+                  {{item.licensePlate}}
+                </td>
+                <td>
+                  {{item.numChasis}}
+                </td>
+                <td class="text-right">
+
+                  <div class="btn-group" role="group" aria-label="Basic example"
+                    *ngIf="item.idStatus == 1 && !flagCliente || item.idStatus == 2 && !flagCliente || item.idStatus == 4 && !flagCliente">
+                    <a class="btn btn-success" (click)="viewQuestionList(formPreguntas,item)">Ingreso</a>
+                  </div>
+                  <div class="btn-group" role="group" aria-label="Basic example"
+                    *ngIf="item.idStatus == 3 && !flagCliente">
+                    <a class="btn btn-success" (click)="viewServiceList(formServicios,item)">Cotizacion</a>
+                  </div>
+                  <div class="btn-group" role="group" aria-label="Basic example" *ngIf="item.idStatus == 5">
+                    <a class="btn btn-success" (click)="navigate(item)">Procedimiento</a>
+                  </div>
+                  <div class="btn-group" role="group" aria-label="Basic example" *ngIf="item.idStatus == 6">
+                    <a class="btn btn-success" (click)="navigate(item)">Factura</a>
+                  </div>
+                  <div class="btn-group" role="group" aria-label="Basic example"
+                    *ngIf="item.idStatus == 7 && !flagCliente">
+                    <a class="btn btn-success" (click)="viewQuestionList(formPreguntas,item)">Salida</a>
+                  </div>
+                  <div class="btn-group" role="group" aria-label="Basic example" *ngIf="!flagCliente">
+                    <a (click)="onDelete(item.id, item.client.id)" class="btn btn-secondary">Eliminar</a>
+                  </div>
+                  <div class="btn-group" role="group" aria-label="Basic example">
+                    <a (click)="viewHistory(template, item)" class="btn btn-secondary">Historial</a>
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+
+
+
+        </div>
+        <div class="card-footer py-4">
+          <nav aria-label="...">
+            <ul class="pagination justify-content-end mb-0">
+              <li *ngFor="let pageLink of pageLinks" class="page-item {{currentPage==pageLink? 'active':''}}">
+                <button class="page-link" (click)="list(pageLink)">{{pageLink}}</button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <ng-template #template>
+    <form>
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Historial ({{license}})</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="doHide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="col-8">
+        <input type="text"  placeholder="Buscar por orden" (keyup)="filterHistory($event)" />
+    </div>
+      <div class="table-responsive">
+        <table class="table align-items-center table-flush">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Fecha</th>
+              <th scope="col">Historial</th>
+              <th scope="col">Numero de Orden</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of bodyResponse; let i = index">
+              <td>
+                {{i + 1}}
+              </td>
+              <td>
+                {{item.createdAt | date: 'medium'}}
+              </td>
+              <td>
+                {{item.state.name}}
+              </td>
+              <td>
+                {{item.numOrder}}
+              </td>
+              <td>
+                <button type="button" *ngIf="item.state.id != 1 && item.state.id != 4 && item.state.id != 5"
+                  (click)="viewUltimateCheckList((item.state.id == 2 || item.state.id == 7 ? formPreguntas: formServicios),item)"
+                  class="btn btn-primary btn-sm">
+                  <span class="fa fa-eye" aria-hidden="true"></span> Detalle
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" (click)="doHide()" class="btn btn-sm btn-primary">
+          <span aria-hidden="true">VOLVER</span>
+        </button>
+      </div>
+    </form>
+
+  </ng-template>
+
+  <ng-template #formPreguntas>
+    <form>
+      <div id="contenido">
+        <div class="modal-header" style="height: 140px;">
+          <table class="table table-responsive table-borderless"
+            style="width: auto; font-family: Century Gothic; font-size: 14px;">
+            <tr>
+              <td style="width: 300px;" align="center">
+                <img src="/assets/img/brand/AutocentralLogo.png" width="auto">
+              </td>
+              <td style="width: 300px;">
+                <b>
+                  <h4>AUTOCENTRAL</h4>
+                </b>
+                Nit: 1030551550 <br />
+                Direccion: Cll 68 # 65b-30 San Fernando<br />
+                <a href="http://www.autocentral.com.co" target="_blank">http://www.autocentral.com.co</a>
+              </td>
+              <td style="text-align:center">
+                {{(flagSalida == true ? 'SALIDA' : 'ORDEN DE TRABAJO')}}<br />
+                # {{orden}}
+              </td>
+            </tr>
+          </table>
+          <button *ngIf="!flag" type="button" class="close pull-right" aria-label="Close" (click)="doHide()"
+            data-html2canvas-ignore>
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <button *ngIf="flag" type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()"
+            data-html2canvas-ignore>
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-header">
+          <table style="width: auto; font-family: Century Gothic; font-size: 14px;"
+            class="table-responsive table-bordered" cellpadding="4" cellspacing="4">
+            <tr *ngIf="!flagCliente">
+              <th>ASESOR/A</th>
+              <td>{{loged?.name}} {{loged.surname}}</td>
+              <th>TELEFONO</th>
+              <td>{{loged.cellPhone}}</td>
+              <th>EMAIL</th>
+              <td>{{loged.mail}}</td>
+            </tr>
+            <tr>
+              <th>CLIENTE</th>
+              <td>{{client?.name}} {{client?.surname}}</td>
+              <th>NIT/CC</th>
+              <td>{{client?.numDocument}}</td>
+              <th>EMAIL</th>
+              <td>{{client?.mail}}</td>
+            </tr>
+            <tr>
+              <th>DIRECCION</th>
+              <td>{{client?.direction}}</td>
+              <th>TELEFONO</th>
+              <td>{{client?.cellPhone}}</td>
+              <th>CONTACTO</th>
+              <td>{{client?.phone}}</td>
+            </tr>
+            <tr>
+              <th>PLACA</th>
+              <td>{{tmpClientCar.licensePlate}} </td>
+              <th>MARCA</th>
+              <td>{{tmpClientCar.car.model.brand.name}}</td>
+              <th>MODELO</th>
+              <td>{{tmpClientCar.car.modelYear}}</td>
+            </tr>
+            <tr>
+              <th>LINEA</th>
+              <td>{{tmpClientCar.car.model.name}}</td>
+              <th>COLOR</th>
+              <td>{{tmpClientCar.color}}</td>
+              <th>CHASIS</th>
+              <td>{{tmpClientCar.numChasis}}</td>
+            </tr>
+            <tr>
+              <th>Kilometraje</th>
+              <td><input type="text" [(ngModel)]="kilometraje" [ngModelOptions]="{standalone: true}"
+                  [disabled]="flag || flagSalida"></td>
+              <th>FECHA INGRESO</th>
+              <td>{{timein | date: 'medium'}}</td>
+              <th>FECHA SALIDA:</th>
+              <td *ngIf="flagSalida">{{timeOut | date: 'medium'}}</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-responsive">
+          <table align="center">
+          <table class="table" style="width: auto; font-family: Century Gothic; padding: 0%;float: left;">
+            <thead class="thead-light">
+              <tr>
+                <th colspan="2"></th>
+                <th scope="col" style="text-align: right;">B R M</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of listaPreguntas1; let i = index">
+                <td style="padding: 0%;"></td>
+                <td style="padding: 0%;">
+                  {{item.idQuestion.question}}
+                </td>
+                <td>
+                  <table style="border: none;" *ngIf="!item.idQuestion.image">
+                    <tr>
+                      <td style="border-top: none;" style="padding: 0%;">
+                        <input type="radio" value="B" [(ngModel)]="item.response" [name]="item.id"
+                          [ngModelOptions]="{standalone: true}" >
+                      </td>
+                      <td style="border-top: none;" style="padding: 0%;">
+                        <input type="radio" value="R" [(ngModel)]="item.response" [name]="item.id"
+                          [ngModelOptions]="{standalone: true}">
+                      </td>
+                      <td style="border-top: none;" style="padding: 0%;">
+                        <input type="radio" value="M" [(ngModel)]="item.response" [name]="item.id"
+                          [ngModelOptions]="{standalone: true}">
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <table class="table align-items-center" style="width: auto; font-family: Century Gothic; padding: 0%; float: left;">
+            <thead class="thead-light">
+              <tr>
+                <th colspan="2"></th>
+                <th scope="col" style="text-align: right;">B R M</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of listaPreguntas2; let i = index">
+                <td style="padding: 0%;"></td>
+                <td style="padding: 0%;">
+                  {{item.idQuestion.question}}
+                </td>
+                <td>
+                  <table style="border: none;" *ngIf="!item.idQuestion.image">
+                    <tr>
+                      <td style="border-top: none;" style="padding: 0%;">
+                        <input type="radio" value="B" [(ngModel)]="item.response" [name]="item.id"
+                          [ngModelOptions]="{standalone: true}">
+                      </td>
+                      <td style="border-top: none;" style="padding: 0%;">
+                        <input type="radio" value="R" [(ngModel)]="item.response" [name]="item.id"
+                          [ngModelOptions]="{standalone: true}">
+                      </td>
+                      <td style="border-top: none;" style="padding: 0%;">
+                        <input type="radio" value="M" [(ngModel)]="item.response" [name]="item.id"
+                          [ngModelOptions]="{standalone: true}">
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <table class="table align-items-center" style="width: auto; font-family: Century Gothic; padding: 0%;">
+            <thead class="thead-light">
+              <tr>
+                <th colspan="2"></th>
+                <th scope="col" style="text-align: right;">B R M</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of listaPreguntas3; let i = index">
+                <td style="padding: 0%;"></td>
+                <td style="padding: 0%;">
+                  {{item.idQuestion.question}}
+                </td>
+                <td>
+                  <table style="border: none;" *ngIf="!item.idQuestion.image">
+                    <tr>
+                      <td style="border-top: none;" style="padding: 0%;">
+                        <input type="radio" value="B" [(ngModel)]="item.response" [name]="item.id"
+                          [ngModelOptions]="{standalone: true}">
+                      </td>
+                      <td style="border-top: none;" style="padding: 0%;">
+                        <input type="radio" value="R" [(ngModel)]="item.response" [name]="item.id"
+                          [ngModelOptions]="{standalone: true}">
+                      </td>
+                      <td style="border-top: none;" style="padding: 0%;">
+                        <input type="radio" value="M" [(ngModel)]="item.response" [name]="item.id"
+                          [ngModelOptions]="{standalone: true}">
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </table>
+        </div>
+        <div class="modal-body">
+          <label>Observacion de ingreso:</label>
+          <textarea style="width: -webkit-fill-available;" [(ngModel)]="observations"
+            [ngModelOptions]="{standalone: true}" rows="4" cols="50"
+            [disabled]="flag || flagSalida">{{observations}}</textarea>
+
+          <label>Detalle del mantenimiento a realizar:</label>
+          <textarea style="width: -webkit-fill-available;" [(ngModel)]="observationDetail"
+            [ngModelOptions]="{standalone: true}" rows="4" cols="50"
+            [disabled]="flag || flagSalida">{{observationDetail}}</textarea>
+
+          <label *ngIf="flagSalida">Observaciones de salida:</label>
+          <textarea style="width: -webkit-fill-available;" [(ngModel)]="observationOutput"
+            [ngModelOptions]="{standalone: true}" rows="4" cols="50" [disabled]="flag"
+            *ngIf="flagSalida">{{observationOutput}}</textarea>
+        </div>
+
+        <div class="modal-footer">
+          <p style="text-align: justify;line-height: 100%">
+            Esta cotización es un estimativo y pueden presentarse diferencias en el momento de la reparación.
+            Quedamos a la espera de la respectiva autorización para proceder al inicio de la reparación.
+            Vigencia 30 días, a partir de la fecha de elaboración. TOTAL DTO. 0,00 AG Soluciones Colombia se compromete
+            a proteger su privacidad por el uso y recopilación de datos obtenidos en este documento de acuerdo a la Ley
+            1581 de 2012 y 1377 de 2013, garantiza confidencialidad y medidas de seguridad para proteger esa
+            información, en pleno ejercicio del derecho de hábeas data. Para consultar el alcance de sus derechos.
+          </p>
+        </div>
+
+        <div class="modal-footer" data-html2canvas-ignore>
+          <link href="https://getbootstrap.com/docs/4.2/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+          <button type="button" (click)="send(flagSalida == true ? 3 : 1, license)" class="btn btn-sm btn-info"
+            [disabled]="sending">
+            <span *ngIf="sending" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+            <span *ngIf="!sending" aria-hidden="true"></span>
+            ENVIAR
+          </button>
+          <button *ngIf="flagButton" type="button" (click)="accept(listaPreguntas)" class="btn btn-sm btn-success"
+            id="aceptar">
+            <span aria-hidden="true">ACEPTAR</span>
+          </button>
+          <button *ngIf="!flag" type="button" (click)="saveQuestions(listaPreguntas1,listaPreguntas2,listaPreguntas3)" class="btn btn-sm btn-primary">
+            <span aria-hidden="true" id="guardar">GUARDAR</span>
+          </button>
+          <button type="button" (click)="generarPDF(license,'contenido')" class="btn btn-sm btn-info">
+            <span aria-hidden="true" id="generarpdf">GENERAR PDF</span>
+          </button>
+          <button *ngIf="flagButton" type="button" (click)="rechazar()" class="btn btn-sm btn-warning">
+            <span aria-hidden="true" id="rechazar">RECHAZAR</span>
+          </button>
+        </div>
+        <div class="table-responsive" *ngIf="listaImagenes != ''">
+          <table class="table align-items-center" style="width: auto; font-family: Century Gothic; font-size: 14px;">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Pregunta</th>
+                <th scope="col">Adjunto</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of listaImagenes; let i = index">
+                <td *ngIf="item.idQuestion.image">
+                  {{ i + 1 }}
+                </td>
+                <td *ngIf="item.idQuestion.image">
+                  {{item.idQuestion.question}}
+                </td>
+                <td style="width: 400px;padding: 0%;">
+                  <div *ngIf="item.idQuestion.image">
+                    <input *ngIf="!flag" type="file" (change)="updateSource($event, item)"
+                      accept=".png, .jpg, .jpeg"><br />
+                    <img *ngIf="source" width="40%" height="40%" [src]="item.response" src="">
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </form>
+
+  </ng-template>
+
+  <ng-template #formServicios>
+    <form id="cotizacion">
+      <div>
+        <div class="modal-header" style="height: 140px;">
+          <table class="table table-responsive table-borderless"
+            style="width: auto; font-family: Century Gothic; font-size: 14px;">
+            <tr>
+              <td style="width: 300px;" align="center">
+                <img src="/assets/img/brand/AutocentralLogo.png" width="auto">
+              </td>
+              <td style="width: 300px;">
+                <b>
+                  <h4>AUTOCENTRAL</h4>
+                </b>
+                Nit: 1030551550 <br />
+                Direccion: Cll 68 # 65b-30 San Fernando<br />
+                <a href="http://www.autocentral.com.co" target="_blank">http://www.autocentral.com.co</a>
+              </td>
+              <td style="text-align:center">
+                COTIZACION<br />
+                # {{orden}}
+              </td>
+            </tr>
+          </table>
+          <button *ngIf="!flag" type="button" class="close pull-right" aria-label="Close" (click)="doHide()"
+            data-html2canvas-ignore>
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <button *ngIf="flag" type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()"
+            data-html2canvas-ignore>
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-header">
+          <table style="width: auto; font-family: Century Gothic; font-size: 14px;"
+            class="table-responsive table-bordered" cellpadding="4" cellspacing="4">
+            <tr *ngIf="!flagCliente">
+              <th>ASESOR/A</th>
+              <td>{{loged?.name}} {{loged.surname}}</td>
+              <th>TELEFONO</th>
+              <td>{{loged.cellPhone}}</td>
+              <th>EMAIL</th>
+              <td>{{loged.mail}}</td>
+            </tr>
+            <tr>
+              <th>CLIENTE</th>
+              <td>{{client?.name}} {{client?.surname}}</td>
+              <th>NIT/CC</th>
+              <td>{{client?.numDocument}}</td>
+              <th>EMAIL</th>
+              <td>{{client?.mail}}</td>
+            </tr>
+            <tr>
+              <th>DIRECCION</th>
+              <td>{{client?.direction}}</td>
+              <th>TELEFONO</th>
+              <td>{{client?.cellPhone}}</td>
+              <th>CONTACTO</th>
+              <td>{{client?.phone}}</td>
+            </tr>
+            <tr>
+              <th>PLACA</th>
+              <td>{{tmpClientCar.licensePlate}} </td>
+              <th>MARCA</th>
+              <td>{{tmpClientCar.car.model.brand.name}}</td>
+              <th>MODELO</th>
+              <td>{{tmpClientCar.car.modelYear}}</td>
+            </tr>
+            <tr>
+              <th>LINEA</th>
+              <td>{{tmpClientCar.car.model.name}}</td>
+              <th>COLOR</th>
+              <td>{{tmpClientCar.color}}</td>
+              <th>CHASIS</th>
+              <td>{{tmpClientCar.numChasis}}</td>
+            </tr>
+            <tr>
+              <th>Kilometraje</th>
+              <td><input type="text" [(ngModel)]="kilometraje" [ngModelOptions]="{standalone: true}" disabled></td>
+              <th>FECHA INGRESO</th>
+              <td>{{timein | date: 'medium'}}</td>
+              <th>FECHA SALIDA:</th>
+              <td></td>
+            </tr>
+          </table>
+        </div>
+        <div class="col-md">
+          <h4 *ngIf="!flag">Asigne un empleado</h4>
+          <select [(ngModel)]="employer" [ngModelOptions]="{standalone: true}" (change)="saveEmploye()" *ngIf="!flag">
+            <option value="0">Selecciona un empleado</option>
+            <option *ngFor="let item of listEmployer" [ngValue]="item?.id">{{item.name}} {{item.surname}}</option>
+          </select>
+          <p *ngIf="employer != null">EMPLEADO ASIGNADO <strong style="text-transform: uppercase;">{{ selectEmployer?.name }}
+              {{selectEmployer?.surname}}</strong></p>
+        </div>
+        <div class="modal-body">
+          <label>Detalle del mantenimiento a realizar:</label>
+          <textarea style="width: -webkit-fill-available;" [(ngModel)]="observationDetail"
+            [ngModelOptions]="{standalone: true}" rows="4" cols="50" disabled>{{observationDetail}}</textarea>
+        </div>
+        <div class="modal-header" data-html2canvas-ignore *ngIf="!flag">
+          <button type="button" class="btn btn-sm btn-success" (click)="addServiceList(addService)">
+            <span aria-hidden="true">AGREGAR</span>
+          </button>
+        </div>
+        <div class="table-responsive">
+          <table class="table align-items-center table-flush">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Servicio/Producto</th>
+                <th scope="col">Precio</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of listaServicios; let i = index">
+                <td>
+                  {{i + 1}}
+                </td>
+                <td>
+                  {{item.idService == null ? "" : item.idService.name}}
+                </td>
+                <td>
+                  $ <input *ngIf="item.idService != null" value="{{item.idService == null ? '' :item.idService.price}}"
+                    [(ngModel)]="item.priceFinal" [ngModelOptions]="{standalone: true}" [disabled]="flag">
+                </td>
+                <td>
+                  <div data-html2canvas-ignore *ngIf="!flag">
+                   
+                    <button type="button" class="btn btn-sm btn-primary" (click)="modifyValue(item)"
+                      id="actualizarValor">
+                      <span aria-hidden="true">ACTULIZAR VALOR</span>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-primary" (click)="removeValue(item)" id="eliminar">
+                      <span aria-hidden="true">ELIMINAR</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="modal-header" data-html2canvas-ignore *ngIf="flag && additionalService">
+          <button type="button" class="btn btn-sm btn-success" (click)="addServiceList(addService)"
+            *ngIf="!flagCliente">
+            <span aria-hidden="true">AGREGAR ADICIONAL</span>
+          </button>
+        </div>
+        <div class="table-responsive" *ngIf="flag && additionalService">
+          <table class="table align-items-center table-flush">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Novedades</th>
+                <th scope="col">Precio</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of bodyResponseTwo; let i = index">
+                <td>
+                  {{i + 1}}
+                </td>
+                <td>
+                  {{item.idService == null ? "" : item.idService.name}}
+                </td>
+                <td>
+                  $ <input *ngIf="item.idService != null" value="{{item.idService == null ? '' :item.idService.price}}"
+                    [(ngModel)]="item.priceFinal" [ngModelOptions]="{standalone: true}" [disabled]="!flag || flagCliente">
+                </td>
+                <td>
+                  <div data-html2canvas-ignore *ngIf="flag && !flagCliente">
+                    <button type="button" class="btn btn-sm btn-primary" (click)="modifyValueAdditional(item)"
+                      id="actualizarValor">
+                      <span aria-hidden="true">ACTULIZAR VALOR</span>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-primary" (click)="removeValueAdditional(item)" id="eliminar">
+                      <span aria-hidden="true">ELIMINAR</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-body">
+        <label>Observaciones de cotizacion:</label>
+        <textarea style="width: -webkit-fill-available;" [(ngModel)]="observationQuotation"
+          [ngModelOptions]="{standalone: true}" rows="4" cols="50" (change)="saveObservation()"
+          [disabled]="flag">{{observationQuotation}}</textarea>
+      </div>
+      <div class="modal-footer table-responsive">
+        <table>
+          <link href="https://getbootstrap.com/docs/4.2/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+          <label class="form-control-label">Precio Final</label>
+          <input value="$ {{tmpQuotation.priceFinal | number}}" disabled>
+          <div data-html2canvas-ignore>
+            <button type="button" (click)="send(2)" class="btn btn-sm btn-info" [disabled]="sending">
+              <span *ngIf="sending" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+              <span *ngIf="!sending" aria-hidden="true"></span>
+              ENVIAR
+            </button>
+            <button type="button" (click)="generarPDF(license,'cotizacion')" class="btn btn-sm btn-info"
+              data-html2canvas-ignore>
+              <span aria-hidden="true">GENERAR PDF</span>
+            </button>
+            <button type="button" (click)="acceptQuotation()" class="btn btn-sm btn-success" data-html2canvas-ignore
+              *ngIf="flagButton">
+              <span aria-hidden="true">ACEPTAR</span>
+            </button>
+            <button type="button" (click)="rechazar()" class="btn btn-sm btn-warning" data-html2canvas-ignore
+              *ngIf="flagButton">
+              <span aria-hidden="true">RECHAZAR</span>
+            </button>
+          </div>
+        </table>
+      </div>
+    </form>
+
+  </ng-template>
+
+
+
+  <ng-template #addService>
+    <form>
+      <div id="contenido">
+        <div class="modal-header">
+          <h4 class="modal-title pull-left">Servicios/Producto</h4>
+          <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-header">
+          <input type="text"  placeholder="Buscar por nombre" (keyup)="updateFilter($event)" />
+        </div>
+        <button type="button" class="btn btn-primary btn-lg btn-block" (click)="changeList()">{{textButton}} <i class="fa fa-exchange-alt"></i></button>
+        <div class="table-responsive">
+          <table class="table align-items-center table-flush">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Servicio/Producto</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Tiempo</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let item of listServices; let i = index">
+                <tr *ngIf="!flagList">
+                  <td>
+                    {{i + 1}}
+                  </td>
+                  <td>
+                    {{item.name}}
+                  </td>
+                  <td>
+                    $ {{item.price | number}}
+                  </td>
+                  <td>
+                    {{item.durationTime}}
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-sm btn-primary" (click)="addNewValues(item)">
+                      <span aria-hidden="true">AÑADIR</span>
+                    </button>
+                  </td>
+                </tr>
+              </ng-container>
+              <ng-container *ngFor="let item of listProducts; let i = index">
+                <tr *ngIf="flagList">
+                  <td>
+                    {{i + 1}}
+                  </td>
+                  <td>
+                    {{item.name}}
+                  </td>
+                  <td>
+                    $ {{item.price | number}}
+                  </td>
+                  <td>
+                    {{item.durationTime}}
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-sm btn-primary" (click)="addNewValues(item)">
+                      <span aria-hidden="true">AÑADIR</span>
+                    </button>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </form>
+
+  </ng-template>
+</div>

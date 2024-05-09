@@ -1,0 +1,73 @@
+<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+  style="min-height: 250px; background-image: url(assets/img/brand/fondo_login.jpg); background-size: cover; background-position: center top; background-position-y: -350px;">
+  <!-- Mask -->
+
+  <!-- Header container -->
+  <div class="container-fluid d-flex align-items-center">
+
+  </div>
+</div>
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header border-0">
+          <div class="row align-items-center">
+            <div class="col-8">
+              <h3 class="mb-0">Preguntas</h3>
+            </div>
+            <div class="col-4 text-right">
+              <a href="#/question" class="btn btn-sm btn-primary">Nuevo</a>
+            </div>
+          </div>
+        </div>
+        <form [formGroup]="modelForm">
+            
+          </form>  
+        <div class="table-responsive">
+          <table class="table align-items-center table-flush">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Pregunta</th>
+                <th scope="col">Tipo Respuesta</th>
+                <th scope="col">Estado</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of questions; let i = index">
+                <td>
+                  {{item.id}}
+                </td>
+                <td scope="row">
+                  <div class="media align-items-center">
+                    <div class="media-body">
+                      <span class="mb-0 text-sm">{{item.question}}</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  {{item.image ? 'IMAGEN' : 'TEXTO'}}
+                </td>
+                <td scope="row">
+                  <div class="media align-items-center">
+                    <div class="media-body">
+                      <span class="mb-0 text-sm">{{item.status ? 'ACTIVO' : 'INACTIVO'}}</span>
+                    </div>
+                  </div>
+                </td>
+                <td class="text-right">
+                  <div class="btn-group" role="group" aria-label="Basic example">
+                    <!--<a class="btn btn-secondary" (click)="onDelete(item.id, item.brand.id)">Eliminar</a>-->
+                    <a [routerLink]="['/question', { id: item.id }]" class="btn btn-secondary">Editar</a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

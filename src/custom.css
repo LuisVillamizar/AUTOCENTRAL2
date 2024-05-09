@@ -1,0 +1,71 @@
+.bg-default-image {
+  background: url(assets/img/brand/fondo_login.jpg) no-repeat center center
+    fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.bg-login-form {
+  height: auto;
+  height: 100vh;
+  background: rgb(0, 0, 0);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.6306897759103641) 100%,
+    rgba(174, 174, 176, 0.31416316526610644) 100%,
+    rgba(0, 212, 255, 1) 100%
+  );
+}
+
+
+.form-control-custom{
+    border-radius: 0 !important; 
+    background-color: transparent;
+    border: 1px solid #c9c9cc !important;
+    color: white !important;
+}
+
+.form-control-custom:focus{
+    border-radius: 0 !important; 
+    background-color: transparent;
+    border: 1px solid #c9c9cc !important;
+    color: white !important;
+}
+
+.custom-btn{
+    border-radius: 0 !important;
+} 
+
+.logo-bottom{
+    position:absolute;
+    bottom:10px;
+    right:30px;
+}
+
+.bg-admin{
+  background-color: #f8f9fe;
+}
+
+
+.black-sidebar{
+  background-color: black !important;
+  color: white !important;
+}
+
+.navbar-brand-img-custom {
+  max-height: 5rem !important;
+}
+
+.navbar-toggler-custom{
+  color: white !important;
+  background-color: white !important;
+}
+
+@media (max-width: 767.98px){
+.navbar-nav .nav-link {
+    padding: 0.625rem 0;
+    color: white !important; 
+}
+}

@@ -1,0 +1,247 @@
+<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+    style="min-height: 250px; background-image: url(assets/img/brand/fondo_login.jpg); background-size: cover; background-position: center top; background-position-y: -350px;">
+    <!-- Mask -->
+
+    <!-- Header container -->
+    <div class="container-fluid d-flex align-items-center">
+
+    </div>
+</div>
+<div class="container-fluid mt--7">
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header border-0">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h3 class="mb-0">Factura</h3>
+                        </div>
+                        <div class="col-4 text-right">
+                            <a [routerLink]="['/request-list', { id: invoiceBody?.idHistoryClientCar?.clientCar?.client?.id }]"
+                                class="btn btn-sm btn-primary">Atras</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table align-items-center table-flush">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Precio final</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    {{invoiceBody.id}}
+                                </td>
+                                <td>
+                                    $ {{invoiceBody.priceInvoice | number}}
+                                </td>
+                                <td>
+                                    <span
+                                        [ngClass]="{'badge-success':invoiceBody.payment == true , 'badge-danger':invoiceBody.payment == false}">
+                                        {{ (invoiceBody.payment == true ? 'PAGADA' : 'SIN PAGAR') }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div>
+                                        <button type="button" class="btn btn-primary" (click)="detail(template)">
+                                            <span aria-hidden="true">Ver Detalle</span>
+                                        </button>
+                                        <button *ngIf="!invoiceBody.payment && !flagCliente" type="button"
+                                            class="btn btn-primary" (click)="changedState()">
+                                            <span aria-hidden="true">Pagar</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <ng-template #template>
+            <form id="factura">
+                <div class="modal-header" style="height: 140px;">
+                    <table class="table table-responsive table-borderless"
+                        style="width: auto; font-family: Century Gothic; font-size: 14px;">
+                        <tr>
+                            <td style="width: 300px;" align="center">
+                                <img src="/assets/img/brand/AutocentralLogo.png" width="auto">
+                            </td>
+                            <td style="width: 300px;">
+                                <b>
+                                    <h4>AUTOCENTRAL</h4>
+                                </b>
+                                Nit: 1030551550 <br />
+                                Direccion: Cll 68 # 65b-30 San Fernando<br />
+                                <a href="http://www.autocentral.com.co"
+                                    target="_blank">http://www.autocentral.com.co</a>
+                            </td>
+                            <td style="text-align:center">
+                                FACTURA<br />
+                                # {{orden}}
+                            </td>
+                        </tr>
+                    </table>
+                    <button *ngIf="!flag" type="button" class="close pull-right" aria-label="Close" (click)="doHide()"
+                        data-html2canvas-ignore>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <button *ngIf="flag" type="button" class="close pull-right" aria-label="Close"
+                        (click)="modalRef.hide()" data-html2canvas-ignore>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-header">
+                    <table style="width: auto; font-family: Century Gothic; font-size: 14px;"
+                        class="table table-responsive table-bordered" cellpadding="4" cellspacing="4">
+                        <tr *ngIf="!flagCliente">
+                            <th>ASESOR/A</th>
+                            <td>{{loged?.name}} {{loged.surname}}</td>
+                            <th>TELEFONO</th>
+                            <td>{{loged.cellPhone}}</td>
+                            <th>EMAIL</th>
+                            <td>{{loged.mail}}</td>
+                        </tr>
+                        <tr>
+                            <th>CLIENTE</th>
+                            <td>{{invoiceBody.idHistoryClientCar.clientCar.client.name}}
+                                {{invoiceBody.idHistoryClientCar.clientCar.client.surname}}</td>
+                            <th>NIT/CC</th>
+                            <td>{{invoiceBody.idHistoryClientCar.clientCar.client.numDocument}}</td>
+                            <th>EMAIL</th>
+                            <td>{{invoiceBody.idHistoryClientCar.clientCar.client.mail}}</td>
+                        </tr>
+                        <tr>
+                            <th>DIRECCION</th>
+                            <td>{{invoiceBody.idHistoryClientCar.clientCar.client.direction}}</td>
+                            <th>TELEFONO</th>
+                            <td>{{invoiceBody.idHistoryClientCar.clientCar.client.cellPhone}}</td>
+                            <th>CONTACTO</th>
+                            <td>{{invoiceBody.idHistoryClientCar.clientCar.client.phone}}</td>
+                        </tr>
+                        <tr>
+                            <th>PLACA</th>
+                            <td>{{invoiceBody.idHistoryClientCar.clientCar.licensePlate}} </td>
+                            <th>MARCA</th>
+                            <td>{{invoiceBody.idHistoryClientCar.clientCar.car.model.brand.name}}</td>
+                            <th>MODELO</th>
+                            <td>{{invoiceBody.idHistoryClientCar.clientCar.car.modelYear}}</td>
+                        </tr>
+                        <tr>
+                            <th>LINEA</th>
+                            <td>{{invoiceBody.idHistoryClientCar.clientCar.car.model.name}}</td>
+                            <th>COLOR</th>
+                            <td>{{invoiceBody.idHistoryClientCar.clientCar.color}}</td>
+                            <th>CHASIS</th>
+                            <td>{{invoiceBody.idHistoryClientCar.clientCar.numChasis}}</td>
+                        </tr>
+                        <!-- <tr>
+                        <th>Kilometraje</th>
+                        <td><input type="text" [(ngModel)]="kilometraje" [ngModelOptions]="{standalone: true}" disabled></td>
+                        <th>FECHA INGRESO</th>
+                        <td>{{timein | date: 'medium'}}</td>
+                        <th>FECHA SALIDA:</th>
+                        <td></td>
+                      </tr> -->
+                    </table>
+                </div>
+                <div class="table-responsive">
+                    <label class="modal-header">Servicios Cotizados</label>
+                    <table class="table align-items-center table-flush">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Procedimiento</th>
+                                <th scope="col">Precio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of bodyServicesQuotation; let i = index">
+                                <td>
+                                    {{i + 1}}
+                                </td>
+                                <td>
+                                    {{item.idQuotationService.idService.name}}
+                                </td>
+                                <td>
+                                    $ {{item.idQuotationService.priceFinal | number}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <label class="modal-header">Servicios Adicionales</label>
+                    <table class="table align-items-center table-flush">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Procedimiento</th>
+                                <th scope="col">Precio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of bodyServicesAdditional; let i = index">
+                                <td>
+                                    {{i + 1}}
+                                </td>
+                                <td>
+                                    {{item.idService.name}}
+                                </td>
+                                <td>
+                                    $ {{item.priceFinal | number}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6 table-responsive">
+                            <table class="table align-items-center table-flush">
+                                <tr>
+                                    <th>Servicios Cotizados</th>
+                                    <td><input
+                                            value="$ {{invoiceBody.idProcedure.idQuotationProcedure.priceFinal | number}}"
+                                            disabled></td>
+                                </tr>
+                                <tr>
+                                    <th>Servicios Adicionales</th>
+                                    <td><input value="$ {{additionalPrice | number}}" disabled></td>
+                                </tr>
+                                <tr>
+                                    <th>Total</th>
+                                    <td><input value="$ {{invoiceBody.priceInvoice | number}}" disabled></td>
+                                </tr>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" data-html2canvas-ignore>
+                    <link href="https://getbootstrap.com/docs/4.2/dist/css/bootstrap.min.css" rel="stylesheet"
+                        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+                        crossorigin="anonymous">
+                    <button type="button" (click)="send()" class="btn btn-sm btn-info" [disabled]="sending">
+                        <span *ngIf="sending" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                        <span *ngIf="!sending" aria-hidden="true"></span>
+                        ENVIAR
+                    </button>
+                    <button type="button" (click)="generarPDF()" class="btn btn-sm btn-info">
+                        <span aria-hidden="true">GENERAR PDF</span>
+                    </button>
+                    <button type="button" (click)="doHide()" class="btn btn-sm btn-primary">
+                        <span aria-hidden="true">VOLVER</span>
+                    </button>
+                </div>
+            </form>
+
+        </ng-template>
+    </div>

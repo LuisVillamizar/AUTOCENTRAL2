@@ -1,0 +1,85 @@
+<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+  style="min-height: 250px; background-image: url(assets/img/brand/fondo_login.jpg); background-size: cover; background-position: center top; background-position-y: -350px;">
+  <!-- Mask -->
+
+  <!-- Header container -->
+  <div class="container-fluid d-flex align-items-center">
+
+  </div>
+</div>
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header border-0">
+          <div class="row align-items-center">
+            <div class="col-8">
+              <h3 class="mb-0">Servicios</h3>
+            </div>
+            
+            <div class="col-4 text-right">
+              <a href="#/service" class="btn btn-sm btn-primary">Nuevo</a>
+            </div>
+
+            <div class="col-8">
+              <input type="text"  placeholder="Buscar por nombre" (keyup)="updateFilter($event)" />
+          </div>
+          </div>
+        </div>
+        <form [formGroup]="modelForm">
+            
+          </form>  
+        <div class="table-responsive">
+          <table class="table align-items-center table-flush">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Servicio/Producto</th>
+                <th scope="col">Duracion</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Tipo</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of services; let i = index">
+                <td>
+                  {{i + 1}}
+                </td>
+                <td scope="row">
+                  <div class="media align-items-center">
+                    <div class="media-body">
+                      <span class="mb-0 text-sm">{{item.name}}</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  {{item.durationTime}}
+                </td>
+                <td scope="row">
+                  <div class="media align-items-center">
+                    <div class="media-body">
+                      <span class="mb-0 text-sm">{{item.status ? 'ACTIVO' : 'INACTIVO'}}</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                    $ {{item.price}} 
+                </td>
+                <td>
+                  {{(item.isProduct == true ? 'SERVICIO' : 'PRODUCTO')}}
+                </td>
+                <td class="text-right">
+                  <div class="btn-group" role="group" aria-label="Basic example">
+                    <a [routerLink]="['/service', { id: item.id }]" class="btn btn-secondary">Editar</a>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

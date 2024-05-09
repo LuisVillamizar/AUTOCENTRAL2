@@ -1,0 +1,252 @@
+<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+    style="min-height: 250px; background-image: url(assets/img/brand/fondo_login.jpg); background-size: cover; background-position: center top; background-position-y: -350px;">
+    <!-- Mask -->
+
+    <!-- Header container -->
+    <div class="container-fluid d-flex align-items-center">
+
+    </div>
+</div>
+<div class="container-fluid mt--7">
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header border-0">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h3 class="mb-0"> PROCEDIMIENTOS</h3>
+                        </div>
+                        <div class="col-4 text-right" >
+                            <a [routerLink]="['/request-list', { id: procedureList?.idHistoryClientCar?.clientCar?.client?.id }]"
+                                class="btn btn-sm btn-primary">Atras</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table align-items-center table-flush">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Empleado</th>
+                                <th scope="col">Fecha Creacion</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <a *ngIf="flagEmployer">
+                                        {{(procedureList.idEmployerProcedure == null ? 'SIN ASIGNAR' :
+                                        procedureList.idEmployerProcedure.name )}}
+
+                                        {{(procedureList.idEmployerProcedure == null ? 'SIN ASIGNAR' :
+                                        procedureList.idEmployerProcedure.surname )}}
+                                    </a>
+                                </td>
+                                <td>
+                                    {{procedureList?.createdAt | date: 'medium'}}
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <a class="btn btn-success" (click)="openProcedure(template)">DETALLE</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+
+        <ng-template #template>
+            <form>
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left">Procedimientos</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="doHide()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+               
+                <div class="table-responsive">
+                    <label class="modal-header">Servicios de la cotizacion</label>
+                    <table class="table align-items-center table-flush">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Procedimiento</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col">Ultima Modificacion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of bodyResponse; let i = index">
+                                <td>
+                                    {{ i + 1}}
+                                </td>
+                                <td>
+                                    {{item.idQuotationService.idService.name}}
+                                </td>
+                                <td *ngIf="!flagCliente">
+                                    <button *ngIf="!item.start" type="button" class="btn btn-sm btn-primary"
+                                        (click)="startProcedure(item,1)">
+                                        <span aria-hidden="true">INICIAR</span>
+                                    </button>
+                                    <button *ngIf="!item.state && item.start" type="button" class="btn btn-sm btn-primary"
+                                        (click)="endProcedure(item,1)">
+                                        <span aria-hidden="true">FINALIZAR</span>
+                                    </button>
+                                    <span class="badge badge-pill badge-success" *ngIf="item.state">FINALIZADO</span>
+                                </td>
+                                <td *ngIf="flagCliente">
+                                    <button *ngIf="!item.start" type="button" class="btn btn-sm btn-primary"
+                                        (click)="startProcedure(item,1)" disabled>
+                                        <span aria-hidden="true">NO INICIADO</span>
+                                    </button>
+                                    <button *ngIf="!item.state && item.start" type="button" class="btn btn-sm btn-primary"
+                                        (click)="endProcedure(item,1)" disabled>
+                                        <span aria-hidden="true">EN CURSO</span>
+                                    </button>
+                                    <span class="badge badge-pill badge-success" *ngIf="item.state">FINALIZADO</span>
+                                </td>
+                                <td>
+                                    {{item.updatedAt | date: 'medium'}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <label class="modal-header">Servicios Adicionales</label>
+                    <!-- <div class="modal-header" data-html2canvas-ignore>
+                        <button type="button" class="btn btn-sm btn-success" (click)="addServiceList(addService)">
+                            <span aria-hidden="true">AGREGAR SERVICIO</span>
+                        </button>
+                    </div> -->
+                    <table class="table align-items-center table-flush">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Procedimiento</th>
+                                <th scope="col" >Estado</th>
+                                <th scope="col">Ultima Modificacion</th>
+                                <!-- <th scope="col" *ngIf="flagCliente">Ultima Modificacion</th> -->
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of bodyResponseTwo; let i = index">
+                                <td>
+                                    {{ i + 1}}
+                                </td>
+                                <td>
+                                    {{item.idService.name}}
+                                </td>
+                                <td *ngIf="!flagCliente">
+                                    <button *ngIf="!item.start" type="button" class="btn btn-sm btn-primary"
+                                        (click)="startProcedure(item,2)">
+                                        <span aria-hidden="true">INICIAR</span>
+                                    </button>
+                                    <button *ngIf="!item.state && item.start" type="button" class="btn btn-sm btn-primary"
+                                        (click)="endProcedure(item,2)">
+                                        <span aria-hidden="true">FINALIZAR</span>
+                                    </button>
+                                    <!-- <a *ngIf="item.state">FINALIZADO</a>-->
+                                    <span class="badge badge-pill badge-success" *ngIf="item.state">FINALIZADO</span>
+                                </td>
+                                <td *ngIf="flagCliente">
+                                    <button *ngIf="!item.start" type="button" class="btn btn-sm btn-primary"
+                                        (click)="startProcedure(item,1)" disabled>
+                                        <span aria-hidden="true">NO INICIADO</span>
+                                    </button>
+                                    <button *ngIf="!item.state && item.start" type="button" class="btn btn-sm btn-primary"
+                                        (click)="endProcedure(item,1)" disabled>
+                                        <span aria-hidden="true">EN CURSO</span>
+                                    </button>
+                                    <span class="badge badge-pill badge-success" *ngIf="item.state">FINALIZADO</span>
+                                </td>
+                                <td>
+                                    {{item.updatedAt | date: 'medium'}}
+                                </td>
+                                <!-- <td>
+                                    $ <input  value="{{item.priceFinal}}"
+                                    [(ngModel)]="item.priceFinal" [ngModelOptions]="{standalone: true}" [disabled]="flagCliente">
+                                </td> -->
+
+
+  
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-body">
+                    <label>Observaciones:</label>
+                    <div>
+                        <textarea style="width: -webkit-fill-available;" [(ngModel)]="observations"
+                            [ngModelOptions]="{standalone: true}" rows="4" cols="50" [disabled]="flagCliente">{{observations}}</textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" (click)="doHide()" class="btn btn-sm btn-primary">
+                        <span aria-hidden="true">VOLVER</span>
+                    </button>
+                    <button *ngIf="flagEndProccess && !flagCliente" type="button" (click)="endAll()"
+                        class="btn btn-sm btn-success">
+                        <span aria-hidden="true">FINALIZAR PROCEDIMIENTO</span>
+                    </button>
+                </div>
+
+            </form>
+
+        </ng-template>
+
+        <ng-template #addService>
+            <form>
+                <div id="contenido">
+                    <div class="modal-header">
+                        <h4 class="modal-title pull-left">Servicios</h4>
+                        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-header">
+                        <input type="text"  placeholder="Buscar por nombre" (keyup)="updateFilter($event)" />
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Servicio</th>
+                                    <th scope="col">Precio</th>
+                                    <th scope="col">Tiempo</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of addServicios; let i = index">
+                                    <td>
+                                        {{item.id}}
+                                    </td>
+                                    <td>
+                                        {{item.name}}
+                                    </td>
+                                    <td>
+                                        $ {{item.price | number}}
+                                    </td>
+                                    <td>
+                                        {{item.durationTime}}
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-primary" (click)="addNewValues(item)">
+                                            <span aria-hidden="true">AÑADIR</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </form>
+
+        </ng-template>
+    </div>

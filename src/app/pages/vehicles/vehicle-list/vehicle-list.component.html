@@ -1,0 +1,132 @@
+<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+  style="min-height: 250px; background-image: url(assets/img/brand/fondo_login.jpg); background-size: cover; background-position: center top; background-position-y: -350px;">
+  <!-- Mask -->
+
+  <!-- Header container -->
+  <div class="container-fluid d-flex align-items-center">
+
+  </div>
+</div>
+<div class="container-fluid mt--7">
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header border-0">
+          <div class="row align-items-center">
+            <div class="col-8">
+              <h3 class="mb-0">Versión</h3>
+            </div>
+            <div class="col-4 text-right">
+              <a href="#/vehicle" class="btn btn-sm btn-primary">Nuevo</a>
+            </div>
+          </div>
+        </div>
+        <form [formGroup]="modelForm">
+            <div class="row">
+            <div class="pl-5">
+              <div class="row">
+                <div class="form-group">
+                  <label class="form-control-label" for="exampleFormControlSelect1">Marca</label>
+                  <select 
+                  class="form-control form-control-alternative" 
+                  formControlName="brand"
+                  (change)="changeBrand($event)"
+                  >
+                    <option *ngFor="let brand of brands" [ngValue]="brand.id">{{brand.name}}
+                    </option>
+
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="pl-5">
+                <div class="row">
+                  <div class="form-group">
+                    <label class="form-control-label" for="exampleFormControlSelect1">Modelo</label>
+                    <select 
+                    class="form-control form-control-alternative" 
+                    formControlName="model"
+                    (change)="changeModel()"
+                    >
+                      <option *ngFor="let model of models" [ngValue]="model.id">{{model.name}}
+                      </option>
+  
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>  
+        <div class="table-responsive">
+          <table class="table align-items-center table-flush">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Marca</th>
+                <th scope="col">Modelo</th>
+                <!--<th scope="col">Año</th>-->
+                <th scope="col">Versión</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of model; let i = index">
+                <th>
+                  {{item.id}}
+                </th>
+                <th>
+                  <div class="media align-items-center">
+                    <div class="media-body">
+                      {{item.model.brand.name}}
+                    </div>
+                  </div>
+                </th>
+                <th scope="row">
+                  <div class="media align-items-center">
+                    <div class="media-body">
+                      <span class="mb-0 text-sm"> {{item.model.name}}</span>
+                    </div>
+                  </div>
+                </th>
+               <!-- <td>
+                    {{item.modelYear}}
+                </td>-->
+                <td>
+                    {{item.name}}
+                </td>
+                <td class="text-right">
+                  <div class="btn-group" role="group" aria-label="Basic example">
+                    <a class="btn btn-secondary" (click)="onDelete(item.id, item.model.id)">Eliminar</a>
+                    <a [routerLink]="['/vehicle', { id: item.id }]" class="btn btn-secondary">Editar</a>
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer py-4">
+          <nav aria-label="...">
+            <ul class="pagination justify-content-end mb-0">
+              <!--- <li class="page-item disabled">
+                  <a class="page-link" href="javascript:void(0)" tabindex="-1">
+                    <i class="fas fa-angle-left"></i>
+                    <span class="sr-only">Previous</span>
+                  </a>
+                </li>-->
+              <li *ngFor="let pageLink of pageLinks" class="page-item {{currentPage==pageLink? 'active':''}}">
+                <button class="page-link" (click)="list(pageLink)">{{pageLink}}</button>
+              </li>
+              <!--<li class="page-item">
+                  <a class="page-link" href="javascript:void(0)">
+                    <i class="fas fa-angle-right"></i>
+                    <span class="sr-only">Next</span>
+                  </a>
+                </li>-->
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

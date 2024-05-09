@@ -1,0 +1,116 @@
+<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+  style="min-height: 250px; background-image: url(assets/img/brand/fondo_login.jpg); background-size: cover; background-position: center top; background-position-y: -350px;">
+  <!-- Mask -->
+
+  <!-- Header container -->
+  <div class="container-fluid d-flex align-items-center">
+
+  </div>
+</div>
+<div class="container-fluid mt--7">
+
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header border-0">
+          <h3 class="mb-0">Solicitudes en proceso</h3>
+        </div>
+        <div class="pl-5">
+          <div class="row">
+
+            <div class="form-group">
+              <form [formGroup]="modelForm">
+                <label class="form-control-label" for="exampleFormControlSelect1">Estado solicitud</label>
+                <select class="form-control form-control-alternative" formControlName="status"
+                  (change)="changeStatus()">
+                  <option *ngFor="let status of statuses" [ngValue]="status.id">{{status.name}}
+                  </option>
+
+                </select>
+              </form>
+            </div>
+
+          </div>
+        </div>
+        <div class="table-responsive"> 
+          <table class="table align-items-center table-flush" [mfData]="model" #mf="mfDataTable" [mfRowsOnPage]="15">
+            <thead class="thead-light">
+              <tr>
+                <th>
+                  <mfDefaultSorter by="id">#</mfDefaultSorter>
+                </th>
+                <th>
+                  <mfDefaultSorter by="nombres">Nombres</mfDefaultSorter>
+                </th>
+                <th>
+                  <mfDefaultSorter by="apellidos">Apellidos</mfDefaultSorter>
+                </th>
+                <th>
+                  <mfDefaultSorter by="vehiculo">Véhiculo</mfDefaultSorter>
+                </th>
+                <th>
+                  <mfDefaultSorter by="placa">Placa</mfDefaultSorter>
+                </th>          
+                <th>
+                  <mfDefaultSorter by="estado">Estado</mfDefaultSorter>
+                </th> 
+                <th>
+                  
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of mf.data; let i = index">
+                <td>{{i + 1}}</td>
+                <td>{{item.clientCar.client.name}}</td>
+                <td>{{item.clientCar.client.surname}}</td>
+                <td>{{item.clientCar.car.model.brand.name}} {{item.clientCar.car.model.name}}</td>
+                <td>{{item.clientCar.licensePlate}}</td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <span class="badge badge-dot mr-4">
+                      <i class="bg-info"></i>  {{item.state.name}}
+                    </span>
+                  </div>
+                </td>
+                <td class="text-right">
+                  
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="7">
+                  <mfBootstrapPaginator [rowsOnPageSet]="[15,25]"></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+
+          <ng-template #content let-modal>
+            <div class="modal-header">
+              <h4 class="modal-title" id="modal-basic-title">Detalles de la solicitud</h4>
+              <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+
+            </div>
+            <div class="modal-footer">
+              <a (click)="modal.dismiss('Cross click')" class="btn btn-outline-dark">Cerrar</a>
+             
+            </div>
+          </ng-template>
+
+
+
+        </div>
+    
+      </div>
+    </div>
+  </div>
+
+
+</div>

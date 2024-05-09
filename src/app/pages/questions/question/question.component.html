@@ -1,0 +1,81 @@
+<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+    style="min-height: 250px;background-image: url(assets/img/brand/fondo_login.jpg); background-size: cover; background-position: center top; background-position-y: -350px;">
+    <!-- Mask -->
+
+    <!-- Header container -->
+    <div class="container-fluid d-flex align-items-center">
+
+    </div>
+</div>
+<div class="container-fluid mt--7">
+    <div class="row">
+
+        <div class="col-xl-12 order-xl-1">
+            <form [formGroup]="modelForm" (ngSubmit)="onSubmit()">
+                <div class="card bg-secondary shadow">
+                    <div class="card-header bg-white border-0">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h3 class="mb-0">Preguntas</h3>
+                            </div>
+                            <div class="col-4 text-right">
+                                <a [routerLink]="['/question-list']" class="btn btn-sm btn-default my-4">
+                                    Atras
+                                </a>
+                                <button type="submit" [disabled]="loading" class="btn btn-sm btn-primary my-4">
+                                    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                                    Guardar
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
+                        <div *ngIf="success" class="alert alert-success mt-3 mb-0">Registro exitoso</div>
+
+                        <h6 class="heading-small text-muted mb-4"></h6>
+                        <div class="pl-lg-4">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Pregunta</label>
+                                        <input type="text" id="name" class="form-control form-control-alternative"
+                                            formControlName="name" class="form-control"
+                                            [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
+                                        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                                            <div *ngIf="f.name.errors.required">Requerido</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label class="form-control-label" for="exampleFormControlSelect1">
+                                        Tipo Respuesta
+                                    </label>
+                                    <select class="form-control form-control-alternative" formControlName="type" >
+                                        <option *ngFor="let type of typeReply" [ngValue]="type.id">{{type.name}}
+                                        </option>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group" *ngIf="modelId" >
+                                        <label class="form-control-label" for="input-username">Estado</label>
+                                        <br />
+                                        <input type="checkbox" id="estado" class="largerCheckbox"
+                                        formControlName="estado" (change)="changedEstado()"/>
+                                        {{estado ? 'ACTIVO' : 'INACTIVO'}}
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

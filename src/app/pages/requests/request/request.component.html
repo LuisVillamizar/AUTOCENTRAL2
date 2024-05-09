@@ -1,0 +1,138 @@
+<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+  style="min-height: 250px; background-image: url(assets/img/brand/fondo_login.jpg); background-size: cover; background-position: center top; background-position-y: -350px;">
+  <!-- Mask -->
+
+  <!-- Header container -->
+  <div class="container-fluid d-flex align-items-center">
+
+  </div>
+</div>
+<div class="container-fluid mt--7">
+  <div class="row">
+
+    <div class="col-xl-12 order-xl-1">
+      <form [formGroup]="modelForm" (ngSubmit)="onSubmit()">
+        <div class="card bg-secondary shadow">
+          <div class="card-header bg-white border-0">
+            <div class="row align-items-center">
+              <div class="col-8">
+                <h3 class="mb-0">Agregar vehiculo para  ({{client?.name}} {{client?.surname}})</h3>
+              </div>
+              <div class="col-4 text-right">
+                <a [routerLink]="['/request-list', {id:clientId}]" class="btn btn-sm btn-default my-4">
+                  Atras
+                </a>
+                <button type="submit" [disabled]="loading" class="btn btn-sm btn-primary my-4">
+                  <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                  Guardar
+                </button>
+
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
+            <div *ngIf="success" class="alert alert-success mt-3 mb-0">Registro exitoso</div>
+
+            <h6 class="heading-small text-muted mb-4"></h6>
+            <div class="pl-lg-4">
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="exampleFormControlSelect1">Marca</label>
+                    <select 
+                    class="form-control form-control-alternative" 
+                    formControlName="brand"
+                    (change)="changeBrand($event)"
+                    >
+                      <option *ngFor="let brand of brands" [ngValue]="brand.id">{{brand.name}}
+                      </option>
+
+                    </select>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+
+                  <div class="form-group">
+                    <div class="form-group">
+                      <label class="form-control-label" for="exampleFormControlSelect1">Linea</label>
+                      <select 
+                      class="form-control form-control-alternative" 
+                      formControlName="model"
+                      (change)="changeModel()"
+                      >
+                        <option *ngFor="let model of models" [ngValue]="model.id">{{model.name}}
+                        </option>
+
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="exampleFormControlSelect1">vehículo</label>
+                    <select class="form-control form-control-alternative" formControlName="vehicle">
+                      <option>Seleccione un vehículo</option>
+                      <option *ngFor="let vehicle of vehicles" [ngValue]="vehicle.id">{{vehicle.name}}
+                      </option>
+
+                    </select>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-username">Placa</label>
+                    <input 
+                    type="url"
+                    class="form-control form-control-alternative" 
+                    formControlName="licensePlate" class="form-control" 
+                    [ngClass]="{ 'is-invalid': submitted && f.licensePlate.errors }" />
+                    <div *ngIf="submitted && f.licensePlate.errors" class="invalid-feedback">
+                        <div *ngIf="f.licensePlate.errors.required">Requerido</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-username">Número chasis</label>
+                    <input 
+                    type="url"
+                    class="form-control form-control-alternative" 
+                    formControlName="numChasis" class="form-control" 
+                    [ngClass]="{ 'is-invalid': submitted && f.numChasis.errors }" />
+                    <div *ngIf="submitted && f.numChasis.errors" class="invalid-feedback">
+                        <div *ngIf="f.numChasis.errors.required">Requerido</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-username">Color</label>
+                    <input 
+                    type="url"
+                    class="form-control form-control-alternative" 
+                    formControlName="color" class="form-control" 
+                    [ngClass]="{ 'is-invalid': submitted && f.color.errors }" />
+                    <div *ngIf="submitted && f.color.errors" class="invalid-feedback">
+                        <div *ngIf="f.color.errors.required">Requerido</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

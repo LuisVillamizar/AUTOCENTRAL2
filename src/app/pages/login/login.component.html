@@ -1,0 +1,91 @@
+<!-- Page content -->
+
+<div class="">
+  <div class="row col-12">
+    <div class="col-12 col-sm-6 col-lg-8 col-xl-8">
+
+    </div>
+
+    <div class="col-12 col-sm-6 col-lg-4 col-xl-4 bg-login-form pt-9" style="position:relative;">
+      <div class="container">
+        <div class="header-body text-center mb-7">
+          <div class="justify-content-center">
+            <div class="col-12">
+              <h1 class="text-white">Bienvenido</h1>
+              <p class="text-light font-weight-normal">AUTO CENTRAL</p>
+              <p class="text-light font-weight-normal">{{welcome}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body py-2">
+        <div class="text-center text-muted mb-4">
+          <p class="text-light font-weight-normal">Ingrese las credenciales</p>
+        </div>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <div class="form-group mb-3">
+            <div class="input-group input-group-alternative">
+
+              <input type="text" value="" formControlName="username" class="form-control form-control-custom"
+                [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
+              <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+                <div *ngIf="f.username.errors.required">usuario requerido</div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group input-group-alternative">
+
+              <input type="password" value="" formControlName="password" class="form-control form-control-custom"
+                [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+              <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                <div *ngIf="f.password.errors.required">contraseña requerida</div>
+              </div>
+            </div>
+          </div>
+          <div class="custom-control custom-control-alternative custom-checkbox">
+            <input class="custom-control-input" id=" customCheckLogin" type="checkbox">
+          </div>
+          <div class="text-center">
+            <button type="submit" (click)="onSubmit(template)" [disabled]="loading"
+              class="btn btn-primary custom-btn my-4">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+              Ingresar
+            </button>
+            <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #template>
+    <form [formGroup]="updateForm">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Actualizar contraseña</h4>
+      </div>
+      <div class="modal-body">
+        <div>
+          <p><em>Ingresa una contraseña diferente a tu correo</em></p>
+        </div>
+        <div class="form-group">
+          <label for="pass1">Nueva Contraseña</label>
+          <input type="password" value="" formControlName="pass1" class="form-control" id="pass1" [(ngModel)]='pss1'
+            required>
+        </div>
+        <div class="form-group">
+          <label for="pass2">Vuelve a escribir la Contraseña</label>
+          <input type="password" value="" formControlName="pass2" class="form-control" id="pass2" [(ngModel)]='pss2'
+            required>
+        </div>
+
+        <button type="submit" id="login" class="btn btn-primary" (click)="checkPasswords()">Actualizar</button>
+        <div class="alert alert-danger" role="alert" *ngIf="alert">
+          {{message}}
+        </div>
+      </div>
+
+    </form>
+
+  </ng-template>
+</div>
